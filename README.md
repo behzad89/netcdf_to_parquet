@@ -14,6 +14,7 @@ F --> G{Spatial filter}
 G --YES--> H(Apply spatialfilter)
 H --> J(Save Apache Parquet file)
 G --NO--> J(Apply spatialfilter)
+J --> L(Save file)
 ```
 
 The pipeline developed in the Python CLI format with following flags:
