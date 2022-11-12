@@ -24,6 +24,5 @@ ARG DEBIAN_FRONTEND=noninteractive
 COPY requirements.txt ./
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-
-
-CMD [ "/bin/bash" ]
+ENTRYPOINT [ "python" ]
+# CMD [/bin/bash] should be used in case want to have access to container
