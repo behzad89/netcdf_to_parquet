@@ -10,10 +10,7 @@ C --YES--> D(Apply time filter)
 D --> E(Apply time filter)
 C --NO--> E(Extract coordinates & value)
 E --> F(Apply spatial indexing)
-F --> G{Spatial filter}
-G --YES--> H(Apply spatialfilter)
-H --> J(Save Apache Parquet file)
-G --NO--> J(Save file)
+F --> J(Save Apache Parquet file)
 ```
 
 The pipeline developed in the Python CLI format with following flags:
@@ -45,6 +42,6 @@ docker run --rm -it \
             --name jua_task \
             jua_env:0.0.1 \
             main.py --file_name precipitation_amount_1hour_Accumulation.nc --date 2022-05 \
-            --timestamp_filter 2022-05-10 2022-05-15 --spatial_filter 62.030042822678894 24.80980571945065 \
+            --timestamp_filter 2022-05-10 2022-05-15 \
             --output_path ./precipitation_amount_20220510_20220515.parquet
 ```

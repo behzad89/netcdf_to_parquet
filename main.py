@@ -62,7 +62,6 @@ def convert_netCDF_to_parquet(
     file_path,
     output_path: str,
     timestamp_filter: Optional[tuple] = None,
-    spatial_filter: Optional[tuple] = None,
     resolution: int = 10):
     """Convert the downloaded netCDF file to parquet"""
 
@@ -99,13 +98,7 @@ def convert_netCDF_to_parquet(
         names=[f"h3Index_{resolution}", "time", f"{variable_name}"],
     )
 
-    if None not in spatial_filter:
-        logger.info("Apply Spatial Filter")
-        h3IndexValue = h3.geo_to_h3(spatial_filter[0], spatial_filter[1], resolution=resolution)
-        expr = pc.field(f"h3Index_{resolution}") == h3IndexValue
-        table = table.filter(expr)
-
-    return pq.write_table(table, f"{output_path}.parquet")
+    return pq.write_table(table, f"{output_path}")
 
 
 def main():
@@ -134,15 +127,6 @@ def main():
     )
 
     parser.add_argument(
-        "--spatial_filter",
-        nargs=2,
-        metavar=("latitude", "longitude"),
-        help="Filtering by coordinates.",
-        type=float,
-        default=(None, None),
-    )
-
-    parser.add_argument(
         "--resolution",
         help="Hierarchical geospatial index of your choice.",
         type=int,
@@ -158,7 +142,6 @@ def main():
     args = parser.parse_args()
     FILE = args.file_name
     StartDate, EndDate = args.timestamp_filter
-    lat, lon = args.spatial_filter
     RESOLUTION = args.resolution
     OUTPATH = args.output_path
     DATE = args.date
@@ -166,7 +149,7 @@ def main():
     # Main code
     KEY = f"{DATE.split('-')[0]}/{DATE.split('-')[1]}/data/{FILE}"
     FILE_PATH = _read_obj_from_s3(os.path.join(BUCKET, KEY))
-    convert_netCDF_to_parquet(FILE_PATH, OUTPATH, (StartDate, EndDate), (lat, lon), RESOLUTION)
+    convert_netCDF_to_parquet(FILE_PATH, OUTPATH, (StartDate, EndDate), RESOLUTION)
     logger.info("File was save in %s", OUTPATH)
 
 
