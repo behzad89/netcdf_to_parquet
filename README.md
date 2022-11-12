@@ -21,9 +21,9 @@ The pipeline developed in the Python CLI format with following flags:
  - `file_name`: The file name e.g. precipitation_amount_1hour_Accumulation.nc in S3 bucket
  - `date`: Date of corresponding data in **YYYY-MM** format
  - `timestamp_filter`: The span of time between a specific start date and end date in **YYYY-MM-DD** format
-  - `spatial_filter`: Corrosponding coordinate to filter in **latitude longitude** format
-- `resolution`: Resolution for hierarchical geospatial indexing; default:10
-- `output_path`: Path to save the parquet file.
+ - `spatial_filter`: Corrosponding coordinate to filter in (**latitude longitude**) format
+ - `resolution`: Resolution for hierarchical geospatial indexing; default:10
+ - `output_path`: Path to save the parquet file.
 
 # Setting up the environment
 
@@ -46,5 +46,5 @@ docker run --rm -it \
             jua_env:0.0.1 \
             bash python main.py --file_name precipitation_amount_1hour_Accumulation.nc --date 2022-05 \
             --timestamp_filter 2022-05-10 2022-05-15 --spatial_filter 62.030042822678894 24.80980571945065 \
-            --output_path ./test.parquet
+            --output_path ./precipitation_amount_20220510_20220515.parquet
 ```
