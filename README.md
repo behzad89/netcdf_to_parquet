@@ -44,5 +44,7 @@ docker run --rm -it \
             -v $(pwd):/jua_ETL_task \
             --name jua_task \
             jua_env:0.0.1 \
-            bash python main.py --file_name precipitation_amount_1hour_Accumulation.nc --date 2022-05 --fileter_date 2022-05-10 2022-05-10 --output_path ./test.parquet
+            bash python main.py --file_name precipitation_amount_1hour_Accumulation.nc --date 2022-05 \
+            --timestamp_filter 2022-05-10 2022-05-15 --spatial_filter 62.030042822678894 24.80980571945065 \
+            --output_path ./test.parquet
 ```

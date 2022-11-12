@@ -43,10 +43,7 @@ def _read_obj_from_s3(s3path: str):
 
 
 def _geo_to_h3_array(coordinates, resolution: int) -> List[int]:
-    hexes = [
-        h3.geo_to_h3(coordinates[i, 0], coordinates[i, 1], resolution)
-        for i in range(coordinates.shape[0])
-    ]
+    hexes = [h3.geo_to_h3(coordinates[i, 0], coordinates[i, 1], resolution) for i in range(coordinates.shape[0])]
     return hexes
 
 
@@ -66,8 +63,7 @@ def convert_netCDF_to_parquet(
     output_path: str,
     timestamp_filter: Optional[tuple] = None,
     spatial_filter: Optional[tuple] = None,
-    resolution: int = 10,
-):
+    resolution: int = 10):
     """Convert the downloaded netCDF file to parquet"""
 
     # Read file & extract corrosponding info
@@ -76,37 +72,37 @@ def convert_netCDF_to_parquet(
     variable_name = list(ds.keys())[1]
     list_coords = list(ds.coords)
 
-    if timestamp_filter is not None:
-        logger.info(
-            "Filtering datestampe between %s & %s",
-            timestamp_filter[0],
-            timestamp_filter[1],
-        )
+    if None not in timestamp_filter:
+        logger.info("Filtering datestampe between %s & %s", timestamp_filter[0],timestamp_filter[1])
         filter = {list_coords[2]: slice(timestamp_filter[0], timestamp_filter[1])}
         ds = ds.sel(filter)
 
     logger.info("Extract coordinates & value")
-    latitudes = ds[list_coords[0]].values
-    longitudes = ds[list_coords[1]].values
+    longitudes = ds[list_coords[0]].values
+    latitudes = ds[list_coords[1]].values
     times = ds[list_coords[2]].values
     ds_values = ds[variable_name].values
-    coordinates = np.vstack((latitudes, longitudes)).T
+
+    times_grid, latitudes_grid, longitudes_grid = [
+        x.flatten() for x in np.meshgrid(times, latitudes, longitudes, indexing="ij")
+    ]
+
+    coordinates = np.vstack((latitudes_grid, longitudes_grid)).T
 
     # Apply spatial index
     logger.info("Apply Spatial Index")
     IndxH3 = _H3Index(coordinates=coordinates, resolution=resolution)
 
+    # Create Appachearrow table
     table = pa.Table.from_arrays(
-        [IndxH3, times, ds_values],
+        [IndxH3, times_grid, ds_values.flatten()],
         names=[f"h3Index_{resolution}", "time", f"{variable_name}"],
     )
 
-    if spatial_filter is not None:
+    if None not in spatial_filter:
         logger.info("Apply Spatial Filter")
-        h3IndexValue = h3.geo_to_h3(
-            spatial_filter[0], spatial_filter[1], resolution=resolution
-        )
-        expr = pc.field("h3Index") == h3IndexValue
+        h3IndexValue = h3.geo_to_h3(spatial_filter[0], spatial_filter[1], resolution=resolution)
+        expr = pc.field(f"h3Index_{resolution}") == h3IndexValue
         table = table.filter(expr)
 
     return pq.write_table(table, f"{output_path}.parquet")
@@ -123,9 +119,11 @@ def main():
         type=str,
         required=True,
     )
+
     parser.add_argument(
         "--date", help="Timestamp of data as YYYY_MM", type=str, required=True
     )
+
     parser.add_argument(
         "--timestamp_filter",
         nargs=2,
@@ -134,14 +132,16 @@ def main():
         type=str,
         default=(None, None),
     )
+
     parser.add_argument(
         "--spatial_filter",
         nargs=2,
         metavar=("latitude", "longitude"),
         help="Filtering by coordinates.",
-        type=str,
+        type=float,
         default=(None, None),
     )
+
     parser.add_argument(
         "--resolution",
         help="Hierarchical geospatial index of your choice.",
@@ -149,6 +149,7 @@ def main():
         default=10,
         required=False,
     )
+
     parser.add_argument(
         "--output_path", help="Path to save the parquet file.", type=str, required=True
     )
@@ -165,9 +166,7 @@ def main():
     # Main code
     KEY = f"{DATE.split('-')[0]}/{DATE.split('-')[1]}/data/{FILE}"
     FILE_PATH = _read_obj_from_s3(os.path.join(BUCKET, KEY))
-    convert_netCDF_to_parquet(
-        FILE_PATH, OUTPATH, (StartDate, EndDate), (lat, lon), RESOLUTION
-    )
+    convert_netCDF_to_parquet(FILE_PATH, OUTPATH, (StartDate, EndDate), (lat, lon), RESOLUTION)
     logger.info("File was save in %s", OUTPATH)
 
 
