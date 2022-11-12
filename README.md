@@ -2,6 +2,29 @@
 
 Pipeline to transform the data into the Apache Parquet datasource
 
+```mermaid
+graph LR
+id1[(AWS S3 Bucket)] --> B(Read datase)
+B --> C{Timestamp filter}
+C --YES--> D(Apply time filter)
+D --> E(Apply time filter)
+C --NO--> E(Extract coordinates & value)
+E --> F(Apply spatial indexing)
+F --> G{Spatial filter}
+G --YES--> H(Apply spatialfilter)
+H --> J(Save Apache Parquet file)
+G --NO--> J(Apply spatialfilter)
+```
+
+The pipeline developed in the Python CLI format with following flags:
+
+ - `file_name`: The file name e.g. precipitation_amount_1hour_Accumulation.nc in S3 bucket
+ - `date`: Date of corresponding data in **YYYY-MM** format
+ - `timestamp_filter`: The span of time between a specific start date and end date in **YYYY-MM-DD** format
+  - `spatial_filter`: Corrosponding coordinate to filter in **latitude longitude** format
+- `resolution`: Resolution for hierarchical geospatial indexing; default:10
+- `output_path`: Path to save the parquet file.
+
 # Setting up the environment
 
 Use provided `requirements.txt` or `Dockerfile` to set up the envirnment.
@@ -14,7 +37,7 @@ Build a new docker image using provided `Dockerfile`. All the required packages 
 docker build -t jua_env:0.0.1 .
 ```
 ### Running container
-The script can run directly or inside the container using the foolowing code.
+The script can run directly or inside the container using the following code.
 
 ```
 docker run --rm -it \
