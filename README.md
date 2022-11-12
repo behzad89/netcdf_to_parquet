@@ -18,7 +18,6 @@ The pipeline developed in the Python CLI format with following flags:
  - `file_name`: The file name e.g. precipitation_amount_1hour_Accumulation.nc in S3 bucket
  - `date`: Date of corresponding data in **YYYY-MM** format
  - `timestamp_filter`: The span of time between a specific start date and end date in **YYYY-MM-DD** format
- - `spatial_filter`: Corrosponding coordinate to filter in (**latitude longitude**) format
  - `resolution`: Resolution for hierarchical geospatial indexing; default:10
  - `output_path`: Path to save the parquet file.
 
