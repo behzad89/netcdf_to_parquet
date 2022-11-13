@@ -1,24 +1,25 @@
-# Name: training_validation_process.py
+# Name: main.py
 # Description: Pipeline for process and convert NetCDF file into parquet file
 # Author: Behzad Valipour Sh. <b.valipour.sh@gmail.com>
 # Date:11.11.2022
 
+import os
 import argparse
 import logging
+import coloredlogs
 import multiprocessing as mp
-import os
 from functools import partial
 from typing import List, Optional
 
-import coloredlogs
-import h3.api.numpy_int as h3
+import s3fs
 import numpy as np
-import pandas as pd
+import xarray as xr
 import pyarrow as pa
 import pyarrow.compute as pc
 import pyarrow.parquet as pq
-import s3fs
-import xarray as xr
+import h3.api.numpy_int as h3
+
+
 
 # Constants
 logger = logging.getLogger(__name__)
@@ -35,7 +36,7 @@ coloredlogs.install(
 BUCKET = "era5-pds"
 
 
-def _read_obj_from_s3(s3path: str):
+def read_obj_from_s3(s3path: str):
     # e.g. s3path = 'era5-pds/2022/05/data/precipitation_amount_1hour_Accumulation.nc'
     fs_s3 = s3fs.S3FileSystem(anon=True)
     remote_file_obj = fs_s3.open(s3path, mode="rb")
@@ -148,7 +149,7 @@ def main():
 
     # Main code
     KEY = f"{DATE.split('-')[0]}/{DATE.split('-')[1]}/data/{FILE}"
-    FILE_PATH = _read_obj_from_s3(os.path.join(BUCKET, KEY))
+    FILE_PATH = read_obj_from_s3(os.path.join(BUCKET, KEY))
     convert_netCDF_to_parquet(FILE_PATH, OUTPATH, (StartDate, EndDate), RESOLUTION)
     logger.info("File was save in %s", OUTPATH)
 
