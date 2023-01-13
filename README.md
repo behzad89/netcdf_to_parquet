@@ -1,4 +1,4 @@
-# Jua.ai’s Geospatial Data Engineering Assessment
+# Geospatial Data Engineering Assessment
 
 Pipeline to transform the data into the Apache Parquet datasource
 
@@ -44,3 +44,5 @@ docker run --rm -it \
             --timestamp_filter 2022-05-10 2022-05-15 \
             --output_path ./precipitation_amount_20220510_20220515.parquet
 ```
+### Running EC2 instance
+Set up the AWS EC2 instance using the `AWS_Bootstrapping_File.sh`. 
