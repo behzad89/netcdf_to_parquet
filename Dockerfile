@@ -27,4 +27,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY main.py ./
 
 CMD [ "python", "./main.py", "--file_name", "precipitation_amount_1hour_Accumulation.nc", "--date", "2022-05", "--timestamp_filter", "2022-05-10", "2022-05-10", "--output_path", "/result/precipitation_amount_20220510_20220510.parquet"]
-# CMD ["/bin/bash"] # should be used in case want to have access to container
+# /result is a directory inside the container which is mounted with EFS. So if the EFS is mounted in the different EC2 instance can be accessible.

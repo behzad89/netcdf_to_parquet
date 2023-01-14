@@ -30,7 +30,10 @@ Use provided `requirements.txt` or `Dockerfile` to set up the envirnment.
 Build a new docker image using provided `Dockerfile`. All the required packages would be installed for this pipeline, and save the build image in AWS ECR.
 
 ```
-docker build -t exp_env:0.0.1 .
+docker build -t netcdf_to_parquet:latest .
 ```
+### Save the result
+AWS EFS can be used to mount in the container to save the final result. The result can be accessed via diffrent EC2 instances or on-permises servers.
+
 ### Running container
-Create a cluster with EC2 instance, and define the task in AWS ECS. Do not forget to give the S3 acess to container using IAM role. This way the can be uploaded in S3 bucket.
+Create a cluster with Frgate/EC2 instance, and define the task in AWS ECS. In the Volume part specify the defined EFS. Add the defined volume to the container (Storage and Logging). Finally, you can add as task to the cluster (Logs of the task can be checked to follow the steps)
