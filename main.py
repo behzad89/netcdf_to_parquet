@@ -42,6 +42,19 @@ def read_obj_from_s3(s3path: str):
     remote_file_obj = fs_s3.open(s3path, mode="rb")
     return remote_file_obj
 
+# TODO; Should be modified to fit the current code
+def upload_to_S3(file_name: str, bucket: str = TEMP_BUCKET, folder: str = TEMP_FOLDER) -> str:
+    """Uploads a given filename to S3"""
+    logger.info("Uploading %s to S3 bucket %s", file_name, bucket)
+    client = boto3.client("s3")
+    waiter = client.get_waiter('object_exists')
+    target_name = os.path.join(folder, file_name.rpartition("/")[-1])
+    client.upload_file(file_name, bucket, target_name)
+    waiter.wait(Bucket=bucket, Key=target_name)  # Wait for the object to be available
+    gdal.VSICurlClearCache()  # Clear gdal S3 cache to ensure files "exist" from gdal perspective
+    logger.info("Upload successful")
+    os.unlink(file_name)
+    return f"s3://{bucket}/{target_name}"
 
 def _geo_to_h3_array(coordinates, resolution: int) -> List[int]:
     hexes = [h3.geo_to_h3(coordinates[i, 0], coordinates[i, 1], resolution) for i in range(coordinates.shape[0])]
