@@ -44,6 +44,7 @@ jobs:
                 docker build -t exp_env:0.0.1 .
           - name: Test image
             run: |
+                ls
                 docker run --rm -v $(pwd):/Geo_ETL_task exp_env:0.0.1 main.py -h > log_docker.txt
 
           - name: Upload the artifact (log_docker)
