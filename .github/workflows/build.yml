@@ -2,6 +2,9 @@ name: build
 
 on: [push]
 
+env:
+  ARTIFACT_NAME: script_help
+
 jobs:
     test_script:
         runs-on: ubuntu-latest
@@ -13,7 +16,6 @@ jobs:
             uses: actions/setup-python@v4
             with:
                 python-version: "3.10" # Python> 3.10 cause error in installing h5py & pyarrow
-                architecture: "x64"
             
           - name: Install dependencies
             run: |
@@ -22,7 +24,13 @@ jobs:
 
           - name: Test the script
             run: |
-                python main.py -h
+                python main.py -h > log.txt
+
+          - name: Upload the artifact
+                    uses: actions/upload-artifact@v3.1.2
+                    with:
+                        name: ${{ env.ARTIFACT_NAME }}
+                        path: ./log.txt
 
     # build_image:
     #     runs-on: ubuntu-latest
