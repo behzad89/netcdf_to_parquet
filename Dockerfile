@@ -21,7 +21,7 @@ RUN apt-get update \
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-COPY requirements.txt ./
+COPY requirements.txt main.py ./
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 #ENTRYPOINT [ "python" ]
