@@ -27,13 +27,14 @@ jobs:
             run: |
                 python main.py -h > log_script.txt
 
-          - name: Upload the artifact
+          - name: Upload the artifact (log_script)
             uses: actions/upload-artifact@v3.1.2
             with:
                 name: ${{ env.SCRIPT_HELP }}
-                path: ./log.txt
+                path: ./log_script.txt
 
     build_test_image:
+        needs: [test_script]
         runs-on: ubuntu-latest
         steps:
           - name: Checkout
@@ -43,4 +44,10 @@ jobs:
                 docker build -t exp_env:0.0.1 .
           - name: Test image
             run: |
-                docker run --rm -it exp_env:0.0.1 main.py -h > log_docker.txt
+                docker run --rm exp_env:0.0.1 main.py -h > log_docker.txt
+
+          - name: Upload the artifact (log_docker)
+            uses: actions/upload-artifact@v3.1.2
+            with:
+                name: ${{ env.SCRIPT_HELP }}
+                path: ./log_script.txt
