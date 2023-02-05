@@ -46,7 +46,7 @@ jobs:
             run: |
                 ls
                 echo $(pwd)
-                docker run --rm -v $(pwd):./Geo_ETL_task exp_env:0.0.1 ./main.py -h > ./Geo_ETL_task/log_docker.txt
+                docker run --rm ./main.py -h
 
           - name: Upload the artifact (log_docker)
             uses: actions/upload-artifact@v3.1.2
