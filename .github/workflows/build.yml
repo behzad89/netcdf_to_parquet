@@ -20,5 +20,5 @@ jobs:
                 pip install --quiet --requirement requirements.txt
 
           - name: Test the script
-            uses: |
+            run: |
                 python main.py -h
