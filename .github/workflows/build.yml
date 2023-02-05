@@ -3,7 +3,8 @@ name: build
 on: [push]
 
 env:
-  ARTIFACT_NAME: script_help
+  SCRIPT_HELP: script_help
+  DOCKER_HELP: docker_help
 
 jobs:
     test_script:
@@ -24,13 +25,14 @@ jobs:
 
           - name: Test the script
             run: |
-                python main.py -h > log.txt
+                python main.py -h > log_script.txt
 
           - name: Upload the artifact
             uses: actions/upload-artifact@v3.1.2
             with:
-                name: ${{ env.ARTIFACT_NAME }}
+                name: ${{ env.SCRIPT_HELP }}
                 path: ./log.txt
+
     build_test_image:
         runs-on: ubuntu-latest
         steps:
