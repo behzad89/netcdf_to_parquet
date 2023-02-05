@@ -6,7 +6,7 @@ env:
   SCRIPT_HELP: script_help
   DOCKER_HELP: docker_help
 
-# jobs:
+jobs:
 #     test_script:
 #         runs-on: ubuntu-latest
 #         steps:
