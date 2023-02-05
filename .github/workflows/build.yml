@@ -31,9 +31,14 @@ jobs:
             with:
                 name: ${{ env.ARTIFACT_NAME }}
                 path: ./log.txt
-
-    # build_image:
-    #     runs-on: ubuntu-latest
-    #     steps:
-    #       - name: Checkout
-    #         uses: actions/checkout@v3
+    build_test_image:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+          - name: Build and tag image
+            run: |
+                docker build -t exp_env:0.0.1 .
+          - name: Test image
+            run: |
+                docker run --rm -it exp_env:0.0.1 main.py -h > log_docker.txt
