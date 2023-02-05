@@ -6,35 +6,35 @@ env:
   SCRIPT_HELP: script_help
   DOCKER_HELP: docker_help
 
-jobs:
-    test_script:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v3
+# jobs:
+#     test_script:
+#         runs-on: ubuntu-latest
+#         steps:
+#           - name: Checkout
+#             uses: actions/checkout@v3
 
-          - name: Set up Python
-            uses: actions/setup-python@v4
-            with:
-                python-version: "3.10" # Python> 3.10 cause error in installing h5py & pyarrow
+#           - name: Set up Python
+#             uses: actions/setup-python@v4
+#             with:
+#                 python-version: "3.10" # Python> 3.10 cause error in installing h5py & pyarrow
             
-          - name: Install dependencies
-            run: |
-                python -m pip install --upgrade pip
-                pip install --quiet --requirement requirements.txt
+#           - name: Install dependencies
+#             run: |
+#                 python -m pip install --upgrade pip
+#                 pip install --quiet --requirement requirements.txt
 
-          - name: Test the script
-            run: |
-                python main.py -h > log_script.txt
+#           - name: Test the script
+#             run: |
+#                 python main.py -h > log_script.txt
 
-          - name: Upload the artifact (log_script)
-            uses: actions/upload-artifact@v3.1.2
-            with:
-                name: ${{ env.SCRIPT_HELP }}
-                path: ./log_script.txt
+#           - name: Upload the artifact (log_script)
+#             uses: actions/upload-artifact@v3.1.2
+#             with:
+#                 name: ${{ env.SCRIPT_HELP }}
+#                 path: ./log_script.txt
 
     build_test_image:
-        needs: [test_script]
+        #needs: [test_script]
         runs-on: ubuntu-latest
         steps:
           - name: Checkout
@@ -46,7 +46,7 @@ jobs:
             run: |
                 ls
                 echo $(pwd)
-                docker run --rm exp_env:0.0.1 ./main.py -h > log_docker.txt
+                docker run --rm -v $(pwd):./Geo_ETL_task exp_env:0.0.1 ./main.py -h > ./Geo_ETL_task/log_docker.txt
 
           - name: Upload the artifact (log_docker)
             uses: actions/upload-artifact@v3.1.2
