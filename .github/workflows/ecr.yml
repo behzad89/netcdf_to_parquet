@@ -16,6 +16,8 @@ jobs:
         steps:
           - name: Checkout
             uses: actions/checkout@v3
+            with:
+              ref: 'AWS_ECS'
 
           - name: Configure AWS credentials
             uses: aws-actions/configure-aws-credentials@v1
@@ -31,7 +33,6 @@ jobs:
           - name: Automatic Tagging of Releases
             id: increment-git-tag
             run: |
-              ls
               bash ./build/git_update.sh -v major
 
           - name: Build, Tag, and Push the Image to Amazon ECR
