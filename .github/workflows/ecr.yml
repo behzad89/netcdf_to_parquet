@@ -4,10 +4,6 @@ on:
   push:
       branches: [AWS_ECS]
 
-env:
-  SCRIPT_HELP: script_help
-  DOCKER_HELP: docker_help
-
 jobs:
     
     build_push_image:
