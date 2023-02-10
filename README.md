@@ -1,3 +1,4 @@
+![](https://github.com/behzad89/netcdf_to_parquet/workflows/ecr/badge.svg)
 # Geospatial Data Engineering Assessment
 
 Pipeline to transform the data into the Apache Parquet datasource
