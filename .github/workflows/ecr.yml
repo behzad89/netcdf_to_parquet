@@ -33,7 +33,7 @@ jobs:
           - name: Automatic Tagging of Releases
             id: increment-git-tag
             run: |
-              bash ./buildd/git_update.sh -v major
+              bash ./buildd/git_update.sh -v patch
 
           - name: Build, Tag, and Push the Image to Amazon ECR
             id: build-image
