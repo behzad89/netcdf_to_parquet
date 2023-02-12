@@ -49,15 +49,15 @@ idle_timeout_minutes: 5
 # Cloud-provider specific configuration.
 provider:
     type: aws
-    region: eu-central-1
+    region: us-east-1
     # Availability zone(s), comma-separated, that nodes may be launched in.
     # Nodes will be launched in the first listed availability zone and will
     # be tried in the subsequent availability zones if launching fails.
-    availability_zone: eeu-central-1a, eu-central-1b, eu-central-1c
+    availability_zone: us-east-1a, us-east-1f, us-east-1e
     # Whether to allow node reuse. If set to False, nodes will be terminated
     # instead of stopped.
-    cache_stopped_nodes: True # If not present, the default is True. To terminate the cluster when 'ray down config.ynl'
-    use_internal_ips: True
+    cache_stopped_nodes: False # If not present, the default is True. To terminate the cluster when 'ray down config.yml'
+    use_internal_ips: False # If True, it would use internal IP to connect to the headnode
 
 # How Ray will authenticate with newly launched nodes.
 auth:
@@ -206,8 +206,11 @@ worker_setup_commands: []
 # Command to start ray on the head node. You don't need to change this.
 head_start_ray_commands:
     - ray stop
-    - ray start --head --port=6379 --object-manager-port=8076 --autoscaling-config=~/ray_bootstrap_config.yaml
+    - ray start --head --dashboard-host=0.0.0.0 --port=6379 --object-manager-port=8076 --autoscaling-config=~/ray_bootstrap_config.yaml
 # Command to start ray on worker nodes. You don't need to change this.
 worker_start_ray_commands:
     - ray stop
     - ray start --address=$RAY_HEAD_IP:6379 --object-manager-port=8076
+
+# --dashboard-host=0.0.0.0 --> It should be added to be able to connect to dashboard via Internet.
+# Security Group also should be modified to accept any IP from port 10001 and 8265
