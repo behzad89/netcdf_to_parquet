@@ -66,7 +66,11 @@ sudo pip install -U \
 	wrapt==1.14.1 \
 	xarray==2022.11.0 \
 	yarl==1.8.1 \
-	jupyterlab
+	jupyterlab \
+	ray==2.2.0 \
+	boto3 \
+	pystac_client \
+	stackstac \
 
 # STEP Welcome Message (Optional)
 chmod -x /etc/update-motd.d/*
