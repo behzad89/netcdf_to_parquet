@@ -71,6 +71,7 @@ sudo pip install -U \
 	boto3 \
 	pystac_client \
 	stackstac \
+	dask
 
 # STEP Welcome Message (Optional)
 chmod -x /etc/update-motd.d/*
