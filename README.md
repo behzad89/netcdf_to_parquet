@@ -1,5 +1,8 @@
 ![](https://github.com/behzad89/netcdf_to_parquet/workflows/build/badge.svg)
-![https://www.linkedin.com/in/bvsh/](https://img.shields.io/badge/LinkedIn-blue?style=flat-square&logo=linkedin&logoColor=white)
+[![badge text](https://img.shields.io/badge/LinkedIn-blue?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/bvsh/)
+
+
+
     
 # Geospatial Data Engineering Assessment
 
