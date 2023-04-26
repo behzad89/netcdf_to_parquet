@@ -1,4 +1,6 @@
 ![](https://github.com/behzad89/netcdf_to_parquet/workflows/build/badge.svg)
+![https://www.linkedin.com/in/bvsh/](https://img.shields.io/badge/LinkedIn-blue?style=flat-square&logo=linkedin&logoColor=white)
+    
 # Geospatial Data Engineering Assessment
 
 Pipeline to transform the data into the Apache Parquet datasource
